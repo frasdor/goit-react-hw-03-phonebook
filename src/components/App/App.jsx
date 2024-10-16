@@ -16,6 +16,22 @@ class App extends Component {
     filter: '',
   };
 
+  // metoda cyklu zycia do wczytywania kontaktw z LocalStorage po zamontowaniu komponentu
+  componentDidMount(){
+    const savedContacts = localStorage.getItem('contacts'); //pobiera dane z LS pod kluczem 'contacts'
+    if (savedContacts) {
+      this.setState({ contacts: JSON.parse(savedContacts) }); // jesli w LS istnieje wpis pod kluczem 'contacts' zostanie on zwrocony jako string
+    }
+  }
+
+  // metoda cyklu zycia do zapisywania kontaktow w LocalStorage po aktualizacji komponentu
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) { // Sprawdzamy, czy poprzednia lista kontaktów (prevState.contacts) różni się od obecnej (this.state.contacts).
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts)); // jesi lista kontaktow ulegnie zmianie (np. dodano lub usunięto kontakt), porownanie zwroci true i wykona sie kod z bloku if. localStorage.setItem('contacts', - zapisuje zaktualizowana liste kontaktow w LS. JSON.stringify(this.state.contacts) - konwertuje na format JSON, aby mozna bylo go przechowac w LS.
+    }
+  }
+
+
   addContact = ({ name, number }) => {
     const contact = {
       id: nanoid(),
